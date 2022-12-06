@@ -2,9 +2,13 @@
 let map
 let marker
 
-function startMap() {
-  fetch('http://api.open-notify.org/iss-now.json')
+function getJson() {
+  return fetch('http://api.open-notify.org/iss-now.json')
     .then(response => response.json())
+}
+
+function startMap() {
+  getJson()
     .then(response => {
       map = L.map('map').setView([response.iss_position.latitude, response.iss_position.longitude], 4)
       marker = L.marker([response.iss_position.latitude, response.iss_position.longitude]).addTo(map);
@@ -16,8 +20,7 @@ function startMap() {
 }
 
 function updateMarkerISS() {
-  fetch('http://api.open-notify.org/iss-now.json')
-    .then(response => response.json())
+  getJson()
     .then(response => {
       marker.remove()
       marker = L.marker([response.iss_position.latitude, response.iss_position.longitude]).addTo(map);
@@ -25,11 +28,10 @@ function updateMarkerISS() {
 }
 
 function centerOnISS() {
-  fetch('http://api.open-notify.org/iss-now.json')
-    .then(response => response.json())
-    .then(response => {
-      map.setView([response.iss_position.latitude, response.iss_position.longitude], 4)
-    })
+  getJson()
+  .then(response => {
+    map.setView([response.iss_position.latitude, response.iss_position.longitude], 4)
+  })
 }
 
 startMap()
